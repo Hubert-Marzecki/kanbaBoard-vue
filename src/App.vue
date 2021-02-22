@@ -8,7 +8,10 @@
       <div class="board__container">
         <!-- HEADER -->
         <div class="container__header">
-          <h1 class="header__title">Design Team Board</h1>
+          {{this.$store.state.selectedTask}}
+          <h1 class="header__title" @click="resetSelectedTask" > All tasks
+            <span v-if="selectedTask !== 'NONE'" class="header__title" @click="goToParentTask"> -  Go to parent task </span>
+            </h1>
         <div class="header__info">
           <p class="task__total">Tasks: 21</p>
           <select>
@@ -22,7 +25,7 @@
         <!-- CONTAINER BODY -->
         <div class="container__body">
           <!-- TASK COLUMN -->
-            <TaskColumn v-for="col in cols" v-bind:key="col" :column-status="col"/>
+            <TaskColumn v-for="col in cols" v-bind:key="col" :column-status="col" :parent-task="selectedTask" />
           <!-- // TASK COLUMN -->
         </div>
         <!-- // BODY -->
@@ -50,19 +53,45 @@ export default {
     return{
       col: Object.entries(this.$store.state.column),
       cols : [
-      "Task",
+      "Tasks",
       "Pending Issue",
       "In Progress",
       "Under Review",
       "Done",
     ],
     }
+
   },
-  
+
+  computed: {
+      selectedTask() {
+        return this.$store.state.selectedTask
+      } 
+  },
+
+  methods: {
+    resetSelectedTask() {
+      this.$store.state.selectedTask = "NONE"
+    },
+
+    find(id, tasks, parent){
+        if(tasks.length === 0 ){
+          return undefined;
+        } else if (tasks.some(task => task.id === id)) {
+          return parent
+        } else {
+          tasks.find(task => find(id, task.subtasks, task.id))
+        }
+      },
+    goToParentTask() {
+      const parent = (this.$store.state.selectedTask, this.$store.state.items, "NONE")
+      console.log(parent);
+      this.$store.state.selectedTask = parent;
+    }
+  },
   mounted() {
     console.log(this.col)
   }
-
 };
 </script>
 <style>

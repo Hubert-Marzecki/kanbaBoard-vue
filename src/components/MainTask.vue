@@ -1,12 +1,12 @@
 <template>
   <!-- TASK COLUMN -->
   <!-- ELEMENT -->
-  <div class="list__element"  @click="e => displayTaskInfo(e)" draggable='true'>
-    <h3 class="element__header">Create a profile screen</h3>
+  <div class="list__element" draggable='true'>
+    <h3 class="element__header">{{name}}</h3>
     <div class="element__info">
       <div class="info__subtasks">
         <img class="subtask__icon" src="#" />
-        <span class="subtask__amount">Subtasks: {{id}}  </span>
+        <span class="subtask__amount" @click="setParentTask">   Subtasks: {{id}}  </span>
       </div>
       <div class="info__priority">
         <span class="DYNAMIC CONENT">Medium</span>
@@ -21,7 +21,7 @@
 
 export default {
   name: "MainTask",
-  props: ["id"],
+  props: ["id", "name"],
 
 methods: {
   dragStart(e) {
@@ -30,6 +30,10 @@ methods: {
   },
   displayTaskInfo(e) {
       console.log(e.target);
+  },
+  setParentTask(e) {
+    this.$store.state.selectedTask = this.id; 
+    console.log(this.$store.state.selectedTask);
   }
 },
   mounted() {

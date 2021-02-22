@@ -9,7 +9,7 @@
             </div>
             <draggable class="list__body" v-model="colItems" @drop.prevent="drop" :start="checkMove" :end="addToNewArr">
               <!-- ELEMENT -->
-                    <MainTask v-for="item in colItemsFn" v-bind:id="item.id" v-bind:key="item.id" />
+                    <MainTask v-for="item in colItemsFn" v-bind:id="item.id" v-bind:key="item.id" v-bind:name="item.name" />
               <!-- // ELEMENT -->
             </draggable>
           </div>
@@ -26,7 +26,7 @@ import CreateNewTask from "./CreateNewTask";
 
 export default {
   name: "TaskColumn",
-  props: ["columnStatus"],
+  props: ["columnStatus", "parentTask"],
   components: {
     CreateNewTask,
     MainTask,
@@ -42,18 +42,28 @@ export default {
   
   computed: {
     colItemsFn (){     
-    return this.$store.state.items.filter(item => {
-       return item.status === this.columnStatus
-     })
+      function colItemsFromParent(allItems, parentTask) {
+        function findById(items, id) {
+        if(items.length === 0) {
+          return undefined 
+        }
+        console.log(items);
+        const item = items.find(it => it.id === id)
+        return item || findById(items.flatMap(it => it.subtasks), id);
+      } 
+      const task = findById(allItems, parentTask)
+      return task && task.subtasks
+    } 
+      const items = this.$store.state.selectedTask === "NONE" ? this.$store.state.items : colItemsFromParent(this.$store.state.items, this.$store.state.selectedTask);
+      console.log(items)
+      console.log(this.columnStatus)
+      return items.filter(item => item.status === this.columnStatus );
     },
   },
   methods: {
-    checkMove(evt){
-      console.log(this.listType);
-      console.log(evt.draggedContext.element.col);
+     checkMove(evt){
     },
     addToNewArr() {
-            console.log(evt.draggedContext.element.col);
     },
     drop(e) {
         const card_id = e.dataTransfer.getData("card_id", target.id);
@@ -61,7 +71,6 @@ export default {
     // dispatch
     openAddTaskPanel(){
       this.$store.state.createNewTask.status = this.columnStatus
-      console.log( this.$store.state.createNewTask.status );
       this.$store.state.createNewTask.isAddingTask = true;
     },
  

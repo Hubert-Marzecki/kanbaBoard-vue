@@ -11,7 +11,7 @@ const store = new Vuex.Store({
   state: {
     items: [{
       id: uuidv4(),
-      name: "Namo",
+      name: "0",
       details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
       status: "Tasks",
       important: "Medium",
@@ -19,14 +19,14 @@ const store = new Vuex.Store({
     },
       {
         id: uuidv4(),
-        name: "Namo",
+        name: "2",
         details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
         important: "Medium",
         status: "Pending Issue",
         subtasks: [
           {
             id: uuidv4(),
-            name: "Namo",
+            name: "01",
             details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
             important: "Medium",
             status: "In Progress",
@@ -34,24 +34,25 @@ const store = new Vuex.Store({
           },
           {
             id: uuidv4(),
-            name: "Namo",
+            name: "21",
             details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
             important: "Medium",
-            status: "UnderReview",
+            status: "Under Review",
             subtasks: [{
               id: uuidv4(),
               name: "Namo",
               details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
               important: "Medium",
-              status: "UnderReview",
-
+              status: "Under Review",
+              subtasks: []
             },
               {
                 id: uuidv4(),
                 name: "Namo",
                 details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
                 important: "Medium",
-                status: "PushLive",
+                status: "Done",
+                subtasks: []
               }
               ]
           },
@@ -60,7 +61,7 @@ const store = new Vuex.Store({
 
       {
         id: uuidv4(),
-        name: "Namo",
+        name: "02",
         details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
         status: "In Progress",
         important: "Medium",
@@ -68,15 +69,16 @@ const store = new Vuex.Store({
       },
       {
         id: uuidv4(),
-        name: "Namo",
+        name: "03",
         details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
         status: "Under Review",
         important: "Medium",
         subtasks: []
       },
+      
       {
         id: uuidv4(),
-        name: "Namo",
+        name: "04",
         details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
         status: "Under Review",
         important: "Medium",
@@ -112,7 +114,8 @@ const store = new Vuex.Store({
         displayName: "Push Live",
         items:[]
       },
-    }
+    },
+    selectedTask: "NONE"
   },
   mutations: {
     addItem (state, item) {
