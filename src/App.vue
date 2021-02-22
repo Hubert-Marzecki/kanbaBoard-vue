@@ -80,12 +80,19 @@ export default {
         } else if (tasks.some(task => task.id === id)) {
           return parent
         } else {
-          tasks.find(task => find(id, task.subtasks, task.id))
+          return tasks.find(task => find(id, task.subtasks, task.id))
         }
       },
     goToParentTask() {
-      const parent = (this.$store.state.selectedTask, this.$store.state.items, "NONE")
-      console.log(parent);
+      // function findParent( id, items, parent){
+      //   if(items.length ===0 ){
+      //     return undefined
+      //   }
+      //   const found = items.find(it => it.id === id) && parent
+      //   return found || items.find()
+      // }
+      const parent = find(this.$store.state.selectedTask, this.$store.state.items, "NONE")
+      
       this.$store.state.selectedTask = parent;
     }
   },
