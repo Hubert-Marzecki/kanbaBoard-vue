@@ -1,7 +1,7 @@
 <template>
   <!-- TASK COLUMN -->
   <!-- ELEMENT -->
-  <div class="list__element"  @click="e => displayTaskInfo(e)"   draggable='true'   >
+  <div class="list__element"  @click="e => displayTaskInfo(e)" draggable='true'>
     <h3 class="element__header">Create a profile screen</h3>
     <div class="element__info">
       <div class="info__subtasks">

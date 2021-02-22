@@ -22,13 +22,13 @@
         <!-- CONTAINER BODY -->
         <div class="container__body">
           <!-- TASK COLUMN -->
-            <TaskColumn v-for="col in col" v-bind:key="col[0].displayName" :list-name="col[1].displayName" :list-type="col[0]"  />
+            <TaskColumn v-for="col in cols" v-bind:key="col" :column-status="col"/>
           <!-- // TASK COLUMN -->
         </div>
         <!-- // BODY -->
       </div>
     </div>
-    <CreateNewTask v-if="this.$store.state.addTask.isAddingTask === true" :status="this.$store.state.addTask.status" />
+    <CreateNewTask v-if="this.$store.state.createNewTask.isAddingTask === true" :status="this.$store.state.createNewTask.status" />
   </div>
 </template>
 <script>
@@ -46,8 +46,16 @@ export default {
   },
 
   data() {
+ // TODO export constants to a separate file 
     return{
-      col: Object.entries(this.$store.state.column)
+      col: Object.entries(this.$store.state.column),
+      cols : [
+      "Task",
+      "Pending Issue",
+      "In Progress",
+      "Under Review",
+      "Done",
+    ],
     }
   },
   

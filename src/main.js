@@ -83,11 +83,9 @@ const store = new Vuex.Store({
         subtasks: []
       },
     ],
-
-
-    addTask: {
+    createNewTask: {
         isAddingTask: false,
-        col: ""
+        status: ""
     },
     column: {
       tasks: {

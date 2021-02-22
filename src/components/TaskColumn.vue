@@ -2,20 +2,16 @@
           <!-- TASK COLUMN -->
           <div class="list">
             <div class="list__head">
-              <h3 class="head__title">{{listName}}
+              <h3 class="head__title">{{columnStatus}}
                 <span class="head__taskAbount">6</span>
               </h3>
               <button class="head__addTask" @click="openAddTaskPanel()">+</button>
             </div>
-       
-
             <draggable class="list__body" v-model="colItems" @drop.prevent="drop" :start="checkMove" :end="addToNewArr">
               <!-- ELEMENT -->
-                    <MainTask v-for="item in colItems" v-bind:id="item.id" v-bind:key="item.id" />
+                    <MainTask v-for="item in colItemsFn" v-bind:id="item.id" v-bind:key="item.id" />
               <!-- // ELEMENT -->
             </draggable>
-
-
           </div>
           <!-- // TASK COLUMN -->
 </template>
@@ -30,7 +26,7 @@ import CreateNewTask from "./CreateNewTask";
 
 export default {
   name: "TaskColumn",
-  props: ["listName", 'listType'],
+  props: ["columnStatus"],
   components: {
     CreateNewTask,
     MainTask,
@@ -38,11 +34,18 @@ export default {
   },
   data() {
     return { 
-     colItems: Object.entries(this.$store.state.items)
-     .flatMap(([name, value]) => {
-       return name === this.listType ? [value]: []
-     })[0].items
+     colItems:  this.$store.state.items.filter(item => {
+       return item.status === this.columnStatus
+     })
     }
+  },
+  
+  computed: {
+    colItemsFn (){     
+    return this.$store.state.items.filter(item => {
+       return item.status === this.columnStatus
+     })
+    },
   },
   methods: {
     checkMove(evt){
@@ -57,8 +60,9 @@ export default {
     },
     // dispatch
     openAddTaskPanel(){
-      this.$store.state.addTask.isAddingTask = true;
-      this.$store.state.addTask.col = this.listType
+      this.$store.state.createNewTask.status = this.columnStatus
+      console.log( this.$store.state.createNewTask.status );
+      this.$store.state.createNewTask.isAddingTask = true;
     },
  
   },
@@ -66,7 +70,7 @@ export default {
     setTimeout(() => {
       this.items = this.$store.state.items;
     }, 500)
-    console.log(this.colItems);
+    console.log(this.columnStatus);
   },
 }
 
