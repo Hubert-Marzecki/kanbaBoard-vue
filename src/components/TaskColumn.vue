@@ -7,11 +7,11 @@
     </div>
     <draggable
       class="list__body"
-      v-model="colItems"
+      v-model="localTasks"
     >
       <!-- ELEMENT -->
       <MainTask
-        v-for="item in colItemsFn"
+        v-for="item in tasks"
         v-bind:id="item.id"
         v-bind:key="item.id"
         v-bind:name="item.name"
@@ -34,7 +34,7 @@ import CreateNewTask from "./CreateNewTask";
 
 export default {
   name: "TaskColumn",
-  props: ["columnStatus", "parentTask"],
+  props: ["columnStatus", "parentTask", "tasks"],
   components: {
     CreateNewTask,
     MainTask,
@@ -45,37 +45,8 @@ export default {
       colItems: this.$store.state.items.filter((item) => {
         return item.status === this.columnStatus;
       }),
+      localTasks: this.tasks
     };
-  },
-
-  computed: {
-    colItemsFn() {
-      function colItemsFromParent(allItems, parentTask) {
-        function findById(items, id) {
-          if (items.length === 0) {
-            return undefined;
-          }
-          const item = items.find((it) => it.id === id);
-          return (
-            item ||
-            findById(
-              items.flatMap((it) => it.subtasks),
-              id
-            )
-          );
-        }
-        const task = findById(allItems, parentTask);
-        return task && task.subtasks;
-      }
-      const items =
-        this.$store.state.selectedTask === "NONE"
-          ? this.$store.state.items
-          : colItemsFromParent(
-              this.$store.state.items,
-              this.$store.state.selectedTask
-            );
-      return items.filter((item) => item.status === this.columnStatus);
-    },
   },
   methods: {
     checkMove(evt) {},

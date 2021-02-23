@@ -8,9 +8,9 @@
       <div class="board__container">
         <!-- HEADER -->
         <div class="container__header">
-          <h1 class="header__title" @click="resetSelectedTask" > MAIN
-            <span v-if="selectedTask !== 'NONE'" class="header__title" @click="goToParentTask"> -  Go to parent task </span>
-            </h1>
+          <h1 class="header__title" @click="resetSelectedTask" > MAIN </h1>
+          <span v-if="selectedTask !== 'NONE'" class="header__title" @click="goToParentTask"> -  Go to parent task </span>
+
         <div class="header__info">
           <p class="task__total">Tasks: 21</p>
         </div>
@@ -19,13 +19,14 @@
         <!-- CONTAINER BODY -->
         <div class="container__body">
           <!-- TASK COLUMN -->
-            <TaskColumn v-for="col in cols" v-bind:key="col" :column-status="col" :parent-task="selectedTask" />
+            <TaskColumn v-for="col in cols" v-bind:key="col" :column-status="col" :parent-task="selectedTask" :tasks="visibleTasks[col]"/>
           <!-- // TASK COLUMN -->
         </div>
         <!-- // BODY -->
       </div>
     </div>
     <CreateNewTask v-if="this.$store.state.createNewTask.isAddingTask === true" :status="this.$store.state.createNewTask.status" />
+    <ItemInfo v-if="this.$store.state.isTaskInfoVisible === true" />
   </div>
 </template>
 <script>
@@ -34,16 +35,19 @@
 import List from "./components/List";
 import TaskColumn from "./components/TaskColumn";
 import CreateNewTask from './components/CreateNewTask'
+import ItemInfo  from './components/ItemInfo'
+
+import {bfs, groupBy, toList} from './utils'
 export default {
   name: "App",
   components: {
     TaskColumn,
     List,
     CreateNewTask,
+    ItemInfo
   },
 
   data() {
- // TODO export constants to a separate file 
     return{
       col: Object.entries(this.$store.state.column),
       cols : [
@@ -60,7 +64,16 @@ export default {
   computed: {
       selectedTask() {
         return this.$store.state.selectedTask
-      } 
+      } ,
+      visibleTasks(){
+        const selectedTask = this.$store.state.selectedTask
+        const allTasks = this.$store.state.items
+        const items = selectedTask === "NONE"
+        ? allTasks
+        : toList(bfs(allTasks, task => task.id === selectedTask, task => task.subtasks))
+                .flatMap(it => it.subtasks);
+        return groupBy(items, it => it.status)
+      }
   },
 
   methods: {
@@ -78,20 +91,13 @@ export default {
         }
       },
     goToParentTask() {
-      // function findParent( id, items, parent){
-      //   if(items.length ===0 ){
-      //     return undefined
-      //   }
-      //   const found = items.find(it => it.id === id) && parent
-      //   return found || items.find()
-      // }
-      const parent = find(this.$store.state.selectedTask, this.$store.state.items, "NONE")
-      console.log(this.$store.state.items);
-      this.$store.state.selectedTask = parent;
+      const selectedTask = this.$store.state.selectedTask
+      const parent = bfs(this.$store.state.items, elem => elem.subtasks.some(it => it.id === selectedTask), elem => elem.subtasks)
+      const parentId = parent && parent.id || "NONE"
+      this.$store.state.selectedTask = parentId;
     }
   },
-  mounted() {
-  }
+
 };
 </script>
 <style>

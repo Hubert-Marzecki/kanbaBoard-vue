@@ -122,6 +122,8 @@ const store = new Vuex.Store({
       },
     },
     selectedTask: "NONE",
+    taskToDisplay: "dupa?",
+    isTaskInfoVisible: false
   },
   mutations: {
     addItem(state, item) {

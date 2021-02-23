@@ -1,66 +1,60 @@
 <template>
   <div class="container">
-  <form class="input__holder" @submit.prevent="addTask" >
-    
+     <form class="input__holder" @submit.prevent="updateItem" >
     <label>Name</label>
     <input type="text" 
-
-    class="input" v-model="newItem.name" required/>
+    class="input" v-model="updatedTask.name" v-bind:placeholder="currentTask.name" />
     <br>
     <label>Description</label>
 
     <textarea  
-    type="text"  class="input desc" v-model="newItem.details" />
+    type="text"  class="input desc" v-model="updatedTask.details" v-bind:placeholder="currentTask.details" />
     <br>
 
-    <select v-model="newItem.important" class="select" required>
+    <select v-model="currentTask.important" class="select" >
       <option>Low</option>
       <option>Medium</option>
       <option>Height</option>
     </select>
-    <button class="add__task" type="sumbit" >ADD TASK</button>
+    <button class="add__task" type="sumbit" >Update Task</button>
   </form>
   </div>
 </template>
 <script>
 // let List = require("./components/List.vue").default;
 import { v4 as uuidv4 } from "uuid";
-import {bfs, toList} from "../utils";
+import {bfs} from "../utils";
 export default {
-  name: "CreateNewTask",
-  props: ["status"],
-   
+  name: "ItemInfo",
   data() {
-    return {
-      newItem: {
-        name: "",
-        details: "",
-        important: "",
-        id: uuidv4(),
-        status: this.status,
-      },
-    };
+      return {
+        updatedTask: {
+          name: ""
+        },
+        currentTask: {}
+      }
   },
   methods: {
-    addTask() {
-      const newTask = {
-        name: this.newItem.name,
-        details: this.newItem.details,
-        important: this.newItem.important,
-        id: uuidv4(),
-        status: this.status,
-        subtasks:[]
-      }
-      const allTasks = this.$store.state.items;
-      const selectedTask = this.$store.state.selectedTask
-      const parentTasks = selectedTask === "NONE"
-          ? allTasks        
-          : toList(bfs(allTasks, task => task.id === selectedTask, task => task.subtasks));
-      parentTasks.push(newTask);
-      this.$store.state.items = [...allTasks];
-      this.$store.state.createNewTask.isAddingTask = false;
+        closeDisplay(e) {
+          console.log(e);
+            this.$store.state.isTaskInfoVisible = false
+        },
+        updateItem() {
+          if(this.updatedTask.name !== "") {
+              this.currentTask.name = this.updatedTask.name;
+              this.currentTask.details= this.updatedTask.details;
+              this.currentTask.important= this.updatedTask.important;
+          }
+          this.$store.state.isTaskInfoVisible = false;
+        }
+        
     },
-  },
+    created() {
+          const a = this.$store.state.items;
+          const selectedTask = this.$store.state.taskToDisplay;
+          this.currentTask =  bfs(a, it => it.id === selectedTask, task => task.subtasks);
+          this.dupa = bfs(a, it => it.id === selectedTask, task => task.subtasks);
+        }
 };
 </script>
 <style scoped>
@@ -107,6 +101,7 @@ label{
   margin: 10px auto 20px;
   padding: 10px;
   font-family: var(--primary-font);
+  border-radius: 5px;
 }
 .desc{
     width: 50%;
@@ -116,18 +111,16 @@ label{
 }
 .select{
   width: 100px;
-  border-radius: 10px;
   border: none;
   padding: 5px 10px;
   font-family: var(--primary-font);
-
+  border-radius: 5px;
 } 
 
 .add__task{
-
   outline: none;
   padding: 10px 20px;
-  border-radius: 10px;
+  border-radius: 5px;
   border: none;
   margin-top: 20px;
   background-color: white;

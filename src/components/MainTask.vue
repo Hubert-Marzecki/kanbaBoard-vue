@@ -2,7 +2,7 @@
   <!-- TASK COLUMN -->
   <!-- ELEMENT -->
   <div class="list__element" draggable="true">
-    <h3 class="element__name" v-on:dblclick="changeName">{{ name }}</h3>
+    <h3 class="element__name" v-on:dblclick="changeName"  @click="displayTaskInfo">{{ name }}</h3>
     <div class="element__info">
       <div class="info__subtasks">
         <img class="subtask__icon" src="../assets/clipboard.png" />
@@ -55,6 +55,9 @@ export default {
       e.dataTransfer = setData("card_id");
     },
     displayTaskInfo(e) {
+      this.$store.state.taskToDisplay = this.id;
+      console.log(this.$store.taskToDisplay );
+      this.$store.state.isTaskInfoVisible = true
     },
     setParentTask(e) {
       this.$store.state.selectedTask = this.id;
@@ -84,7 +87,10 @@ export default {
 .element__name {
   margin-left: 10px;
   margin-top: 10px;
-  font-weight: 500x;
+  font-weight: 500;
+  font-size: 14px;
+  word-wrap: break-word;
+  padding-right: 10px;
 }
 .element__info {
   margin-top: 20px;
