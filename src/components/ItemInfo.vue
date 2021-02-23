@@ -3,20 +3,24 @@
      <form class="input__holder" @submit.prevent="updateItem" >
     <label>Name</label>
     <input type="text" 
-    class="input" v-model="updatedTask.name" v-bind:placeholder="currentTask.name" />
+    class="input" v-model="updatedTask.name" />
     <br>
     <label>Description</label>
 
     <textarea  
-    type="text"  class="input desc" v-model="updatedTask.details" v-bind:placeholder="currentTask.details" />
+    type="text" class="input desc" v-model="updatedTask.details"/>
     <br>
 
-    <select v-model="currentTask.important" class="select" >
+    <select v-model="updatedTask.important" class="select" >
       <option>Low</option>
       <option>Medium</option>
       <option>Height</option>
     </select>
+    <div class="button__wrapper">
     <button class="add__task" type="sumbit" >Update Task</button>
+    <button class="add__task" @click.prevent="closeDisplay" >Cancel</button>
+    </div>
+
   </form>
   </div>
 </template>
@@ -29,31 +33,43 @@ export default {
   data() {
       return {
         updatedTask: {
-          name: ""
-        },
-        currentTask: {}
+          name: "",
+          details: "",
+          important: ""
+        }
       }
   },
   methods: {
-        closeDisplay(e) {
-          console.log(e);
-            this.$store.state.isTaskInfoVisible = false
+        closeDisplay() {
+            this.$store.commit("closeItemInfo")
         },
         updateItem() {
+          console.error(this.updatedTask)
           if(this.updatedTask.name !== "") {
-              this.currentTask.name = this.updatedTask.name;
-              this.currentTask.details= this.updatedTask.details;
-              this.currentTask.important= this.updatedTask.important;
+            const newModel = {
+                id: this.updatedTask.id,
+                name: this.updatedTask.name,
+                details: this.updatedTask.details,
+                important: this.updatedTask.important
+              }
+              console.error(newModel); 
+              this.$store.commit("updateTask",newModel)
           }
-          this.$store.state.isTaskInfoVisible = false;
         }
-        
     },
     created() {
-          const a = this.$store.state.items;
+          const allTasks = this.$store.state.items;
           const selectedTask = this.$store.state.taskToDisplay;
-          this.currentTask =  bfs(a, it => it.id === selectedTask, task => task.subtasks);
-          this.dupa = bfs(a, it => it.id === selectedTask, task => task.subtasks);
+          const {id, name, details, important} = bfs(allTasks, it => it.id === selectedTask, task => task.subtasks)||  {
+              id: "NONE",
+              name: "",
+              details: "",
+              important: ""
+            }
+          this.updatedTask.id = id;
+          this.updatedTask.name = name;
+          this.updatedTask.details = details;
+          this.updatedTask.important = important;
         }
 };
 </script>
@@ -116,7 +132,10 @@ label{
   font-family: var(--primary-font);
   border-radius: 5px;
 } 
-
+.button__wrapper{
+  display: flex;
+  justify-content: space-around;
+}
 .add__task{
   outline: none;
   padding: 10px 20px;

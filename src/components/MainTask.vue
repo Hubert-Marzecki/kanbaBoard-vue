@@ -42,12 +42,13 @@ export default {
 
   data() {
     return {
-      isChangingName: true,
+      isChangingName: false,
     };
   },
 
   methods: {
     changeName() {
+        isChangingName = true
     },
 
     dragStart(e) {

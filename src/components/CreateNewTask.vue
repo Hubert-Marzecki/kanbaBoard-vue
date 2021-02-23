@@ -51,14 +51,7 @@ export default {
         status: this.status,
         subtasks:[]
       }
-      const allTasks = this.$store.state.items;
-      const selectedTask = this.$store.state.selectedTask
-      const parentTasks = selectedTask === "NONE"
-          ? allTasks        
-          : toList(bfs(allTasks, task => task.id === selectedTask, task => task.subtasks));
-      parentTasks.push(newTask);
-      this.$store.state.items = [...allTasks];
-      this.$store.state.createNewTask.isAddingTask = false;
+     this.$store.commit("addTask", newTask)
     },
   },
 };

@@ -5,7 +5,7 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 Vue.config.productionTip = false;
 import { v4 as uuidv4 } from "uuid";
-
+import {bfs} from "./utils";
 const store = new Vuex.Store({
   state: {
     items: [
@@ -147,6 +147,32 @@ const store = new Vuex.Store({
       };
       state.items = state.items.map(select);
     },
+    addTask(state, newTask){
+      const allTasks = state.items;
+      const selectedTask = state.selectedTask
+      const parentTasks = selectedTask === "NONE"
+          ? allTasks        
+          : toList(bfs(allTasks, task => task.id === selectedTask, task => task.subtasks));
+      parentTasks.push(newTask);
+      state.items = [...allTasks];
+      state.createNewTask.isAddingTask = false;
+    },
+    closeItemInfo(state) {
+      state.isTaskInfoVisible = false
+    },
+    resetSelectedTask(state) { 
+      state.selectedTask = "NONE"
+    },
+    updateTask(state, {id, name, details, important}) {
+      const task = bfs(state.items, task => {
+        console.error(task);
+        return task.id === id;
+      }, task => task.subtasks) || {}
+      task.name = name;
+      task.details = details;
+      task.important = important;
+      state.isTaskInfoVisible = false;
+    }
   },
 });
 

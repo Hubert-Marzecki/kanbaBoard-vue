@@ -32,7 +32,6 @@
 <script>
 // let List = require("./components/List.vue").default;
 
-import List from "./components/List";
 import TaskColumn from "./components/TaskColumn";
 import CreateNewTask from './components/CreateNewTask'
 import ItemInfo  from './components/ItemInfo'
@@ -42,7 +41,6 @@ export default {
   name: "App",
   components: {
     TaskColumn,
-    List,
     CreateNewTask,
     ItemInfo
   },
@@ -77,8 +75,9 @@ export default {
   },
 
   methods: {
+    
     resetSelectedTask() {
-      this.$store.state.selectedTask = "NONE"
+      this.$store.commit('resetSelectedTask')
     },
 
     find(id, tasks, parent){
