@@ -1,24 +1,18 @@
 <template>
   <div id="app">
-    <img alt="Codein logo" src="./assets/logo.svg" />
-    <h1>Codein To-do list</h1>
+    <img class="logo" alt="Codein logo" src="./assets/logo.svg" />
+    <h1 class="title">Codein To-do list</h1>
     <div class="content">
       <!-- <List/>
       <Preview/> -->
       <div class="board__container">
         <!-- HEADER -->
         <div class="container__header">
-          {{this.$store.state.selectedTask}}
-          <h1 class="header__title" @click="resetSelectedTask" > All tasks
+          <h1 class="header__title" @click="resetSelectedTask" > MAIN
             <span v-if="selectedTask !== 'NONE'" class="header__title" @click="goToParentTask"> -  Go to parent task </span>
             </h1>
         <div class="header__info">
           <p class="task__total">Tasks: 21</p>
-          <select>
-            <option>All Task</option>
-            <option>Completed</option>
-            <option>With Subtask</option>
-          </select>
         </div>
         </div>
         <!-- // HEADER -->
@@ -92,12 +86,11 @@ export default {
       //   return found || items.find()
       // }
       const parent = find(this.$store.state.selectedTask, this.$store.state.items, "NONE")
-      
+      console.log(this.$store.state.items);
       this.$store.state.selectedTask = parent;
     }
   },
   mounted() {
-    console.log(this.col)
   }
 };
 </script>
@@ -106,11 +99,23 @@ export default {
 @import './styles/varibles.css';
 #app {
   height: 100vh;
-  background-color: burlywood;
+  background: rgb(34,195,185);
+  background: linear-gradient(33deg, rgba(34,195,185,0.5) 0%, rgba(253,187,45,0.5) 100%); 
+  font-family: var(--primary-font);
 }
-.content {
+.logo{
+  margin: 0 auto;
+  padding-top: 20px;
+  display: block;
+}
+.title{
+  text-align: center;
+  padding-top: 10px;
+  font-weight: 600;
+  color: white;
+}
 
-  background-color: cadetblue;
+.content {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -118,47 +123,40 @@ export default {
 }
 
 .board__container{
-    background-color: rgb(183, 249, 252);
+  background-color: white;
   display: flex;
   flex-direction: column;
   height: 90%;
   width: 80%;
+  border-radius: 10px;
 }
 
 .container__header{
   display: flex;
-  background-color: chartreuse;
   justify-content: space-between;
+  align-items: center;
+  height: 40px;
 }
-.header__info{
-  display: flex;
+
+.container__header .header__title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 20px;
+}
+.container__header  .task__total{
+  margin-right: 20px;
 }
 
 .container__body{
   display: flex;
-  direction: row;
-  background-color: yellow;
-  overflow-x: visible;
 }
 
-.list{
-  display: flex;
+@media only screen and (max-width: 1200px) {
+.container__body{
   flex-direction: column;
-  width: 20%;
-  background-color: cornflowerblue;
-}
+  overflow-y: scroll;
 
-.list__head{
-  display: flex;
-  justify-content: space-between;
-}
-
-.list__element{
   
-}
-
-.element__info{
-  display: flex;
-  justify-content: space-between;
+  }
 }
 </style>

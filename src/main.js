@@ -1,148 +1,154 @@
-import Vue from 'vue'
-import App from './App.vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import App from "./App.vue";
+import Vuex from "vuex";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 Vue.config.productionTip = false;
 import { v4 as uuidv4 } from "uuid";
 
-
 const store = new Vuex.Store({
   state: {
-    items: [{
-      id: uuidv4(),
-      name: "0",
-      details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
-      status: "Tasks",
-      important: "Medium",
-      subtasks: []
-    },
+    items: [
+      {
+        id: uuidv4(),
+        name: "0",
+        details:
+          "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
+        status: "Tasks",
+        important: "Medium",
+        subtasks: [],
+      },
       {
         id: uuidv4(),
         name: "2",
-        details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
+        details:
+          "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
         important: "Medium",
         status: "Pending Issue",
         subtasks: [
           {
             id: uuidv4(),
             name: "01",
-            details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
+            details:
+              "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
             important: "Medium",
             status: "In Progress",
-            subtasks: []
+            subtasks: [],
           },
           {
             id: uuidv4(),
             name: "21",
-            details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
+            details:
+              "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
             important: "Medium",
             status: "Under Review",
-            subtasks: [{
-              id: uuidv4(),
-              name: "Namo",
-              details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
-              important: "Medium",
-              status: "Under Review",
-              subtasks: []
-            },
+            subtasks: [
               {
                 id: uuidv4(),
                 name: "Namo",
-                details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
+                details:
+                  "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
+                important: "Medium",
+                status: "Under Review",
+                subtasks: [],
+              },
+              {
+                id: uuidv4(),
+                name: "Namo",
+                details:
+                  "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
                 important: "Medium",
                 status: "Done",
-                subtasks: []
-              }
-              ]
+                subtasks: [],
+              },
+            ],
           },
-        ]
+        ],
       },
 
       {
         id: uuidv4(),
         name: "02",
-        details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
+        details:
+          "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
         status: "In Progress",
         important: "Medium",
-        subtasks: []
+        subtasks: [],
       },
       {
         id: uuidv4(),
         name: "03",
-        details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
+        details:
+          "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
         status: "Under Review",
-        important: "Medium",
-        subtasks: []
+        important: "Low",
+        subtasks: [],
       },
-      
+
       {
         id: uuidv4(),
         name: "04",
-        details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
+        details:
+          "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
         status: "Under Review",
-        important: "Medium",
-        subtasks: []
+        important: "Height",
+        subtasks: [],
       },
     ],
     createNewTask: {
-        isAddingTask: false,
-        status: ""
+      isAddingTask: false,
+      status: "",
     },
     column: {
       tasks: {
         displayName: "Tasks",
-        items:[]
+        items: [],
       },
       pendingIssue: {
         displayName: "Pending Issue",
-        items:[]
-
+        items: [],
       },
-      inProgress:
-      {
+      inProgress: {
         displayName: "In Progress",
-        items:[]
-
+        items: [],
       },
-      underReview:{
+      underReview: {
         displayName: "Under Review",
-        items:[]
-
+        items: [],
       },
       pushLive: {
         displayName: "Push Live",
-        items:[]
+        items: [],
       },
     },
-    selectedTask: "NONE"
+    selectedTask: "NONE",
   },
   mutations: {
-    addItem (state, item) {
-      state.items.push(item)
+    addItem(state, item) {
+      state.items.push(item);
     },
     selectItem(state, uuid) {
       let select = (i) => {
-        i.children.map(select)
-        i.selected = i.id === uuid
-        return i
-      }
-      state.items = state.items.map(select)
+        i.children.map(select);
+        i.selected = i.id === uuid;
+        return i;
+      };
+      state.items = state.items.map(select);
     },
-    rename(state, {uuid, name}) {
+    rename(state, { uuid, name }) {
       let select = (i) => {
-        i.children.map(select)
-        if(i.id === uuid) {
-          i.name = name
+        i.children.map(select);
+        if (i.id === uuid) {
+          i.name = name;
         }
-        return i
-      }
-      state.items = state.items.map(select)
-    }
-  }
-})
+        return i;
+      };
+      state.items = state.items.map(select);
+    },
+  },
+});
 
 new Vue({
-  render: h => h(App),
-  store
-}).$mount('#app')
+  render: (h) => h(App),
+  store,
+}).$mount("#app");
