@@ -8,11 +8,11 @@
       <div class="board__container">
         <!-- HEADER -->
         <div class="container__header">
-          <h1 class="header__title" @click="resetSelectedTask" > MAIN </h1>
-          <span v-if="selectedTask !== 'NONE'" class="header__title" @click="goToParentTask"> -  Go to parent task </span>
-
+          <h1 class="header__title" > <span  @click="resetSelectedTask"> AVESOME BOARD </span> 
+          <span v-if="selectedTask !== 'NONE'" class="header__title" @click="goToParentTask">-  Go to parent task </span>
+</h1>
         <div class="header__info">
-          <p class="task__total">Tasks: 21</p>
+          <p class="task__total">Tasks: {{taskCount}}</p>
         </div>
         </div>
         <!-- // HEADER -->
@@ -71,6 +71,13 @@ export default {
         : toList(bfs(allTasks, task => task.id === selectedTask, task => task.subtasks))
                 .flatMap(it => it.subtasks);
         return groupBy(items, it => it.status)
+      },
+      taskCount() {
+        function count(task){
+          return task.subtasks.reduce((acc, it) => acc + count(it), 1)
+        }
+        // -1 to discard the `fake` supertask 
+        return count({subtasks: this.$store.state.items}) - 1
       }
   },
 
@@ -79,16 +86,6 @@ export default {
     resetSelectedTask() {
       this.$store.commit('resetSelectedTask')
     },
-
-    find(id, tasks, parent){
-        if(tasks.length === 0 ){
-          return undefined;
-        } else if (tasks.some(task => task.id === id)) {
-          return parent
-        } else {
-          return tasks.find(task => find(id, task.subtasks, task.id))
-        }
-      },
     goToParentTask() {
       const selectedTask = this.$store.state.selectedTask
       const parent = bfs(this.$store.state.items, elem => elem.subtasks.some(it => it.id === selectedTask), elem => elem.subtasks)

@@ -2,13 +2,17 @@
   <!-- TASK COLUMN -->
   <!-- ELEMENT -->
   <div class="list__element" draggable="true">
-    <h3 class="element__name" v-on:dblclick="changeName"  @click="displayTaskInfo">{{ name }}</h3>
+    <!-- @click="displayTaskInfo"-->
+    <h3 v-if="isChangingName === false" class="element__name" v-on:dblclick="changeName"  >{{ name }}</h3>
+    <input v-if="isChangingName === true" v-on:blur="updateName" v-on:keyup.enter="updateName" v-model="localName" class="element__name"  />
+
     <div class="element__info">
       <div class="info__subtasks">
         <img class="subtask__icon" src="../assets/clipboard.png" />
-        <span class="subtask__amount" @click="setParentTask">
+        <span class="subtask__amount" @click="displayTaskSubtasks">
           Subtasks: {{ subtasks.length }}
         </span>
+        <span class="view__notes" @click="displayTaskInfo"> Edit </span>
       </div>
       <div
         v-if="important === 'Medium'"
@@ -43,30 +47,28 @@ export default {
   data() {
     return {
       isChangingName: false,
+      localName: this.name
     };
   },
 
-  methods: {
-    changeName() {
-        isChangingName = true
-    },
 
-    dragStart(e) {
-      const target = e.target;
-      e.dataTransfer = setData("card_id");
+
+  methods: {
+    updateName() {
+      this.$store.commit("updateTaskName",{id: this.id, name: this.localName})
+      this.isChangingName =  false
     },
-    displayTaskInfo(e) {
-      this.$store.state.taskToDisplay = this.id;
-      console.log(this.$store.taskToDisplay );
-      this.$store.state.isTaskInfoVisible = true
+    changeName() {
+        this.isChangingName = true;
     },
-    setParentTask(e) {
-      this.$store.state.selectedTask = this.id;
-      console.log(this.$store.state.selectedTask);
+    displayTaskInfo() {
+      this.$store.commit("displayTaskInfo", this.id);
+    },
+    displayTaskSubtasks() {
+      this.$store.commit("displayTaskSubtasks", this.id);
     },
   },
-  mounted() {
-  },
+
 };
 </script>
 <style scoped>
@@ -108,6 +110,12 @@ export default {
   padding: 5px 10px;
   margin-top: -3px;
   border-radius: 10px;
+}
+.view__notes{
+  padding: 5px 8px;
+  background-color: rgba(211, 211, 211, 0.562);
+  border-radius: 5px;
+  margin-left: 10px;
 }
 .info__priority--medium {
   background-color: rgb(255, 253, 206);

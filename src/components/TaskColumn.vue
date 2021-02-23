@@ -8,10 +8,11 @@
     <draggable
       class="list__body"
       v-model="localTasks"
+       @start="drag=true" 
     >
       <!-- ELEMENT -->
       <MainTask
-        v-for="item in tasks"
+        v-for="item in localTasks"
         v-bind:id="item.id"
         v-bind:key="item.id"
         v-bind:name="item.name"
@@ -48,22 +49,27 @@ export default {
       localTasks: this.tasks
     };
   },
+  computed: {
+    // localoTasks(){
+    //   return this.tasks
+    // } 
+  },
   methods: {
     checkMove(evt) {},
     addToNewArr() {},
     drop(e) {
+      console.error(e);
       const card_id = e.dataTransfer.getData("card_id", target.id);
     },
     // dispatch
     openAddTaskPanel() {
-      this.$store.state.createNewTask.status = this.columnStatus;
-      this.$store.state.createNewTask.isAddingTask = true;
+      this.$store.commit("openAddTaskPanel", this.columnStatus)
     },
   },
   mounted() {
     setTimeout(() => {
       this.items = this.$store.state.items;
-    }, 500);
+    }, 500); 
   },
 };
 </script>

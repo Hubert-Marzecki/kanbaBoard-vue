@@ -164,15 +164,27 @@ const store = new Vuex.Store({
       state.selectedTask = "NONE"
     },
     updateTask(state, {id, name, details, important}) {
-      const task = bfs(state.items, task => {
-        console.error(task);
-        return task.id === id;
-      }, task => task.subtasks) || {}
+      const task = bfs(state.items, task => task.id === id, task => task.subtasks) || {}
       task.name = name;
       task.details = details;
       task.important = important;
       state.isTaskInfoVisible = false;
-    }
+    }, 
+    displayTaskInfo(state, id) {
+      state.taskToDisplay = id;
+      state.isTaskInfoVisible = true
+    },
+    displayTaskSubtasks(state, id){
+      state.selectedTask = id;
+    },
+    openAddTaskPanel(state, status) {
+      state.createNewTask.status = status;
+      state.createNewTask.isAddingTask = true;
+    },
+    updateTaskName(state, {id, name}) {
+      const task = bfs(state.items, task => task.id === id, task => task.subtasks) || {}
+      task.name = name;
+    } 
   },
 });
 
