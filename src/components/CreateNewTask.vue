@@ -18,7 +18,11 @@
       <option>Medium</option>
       <option>Height</option>
     </select>
-    <button class="add__task" type="sumbit" >ADD TASK</button>
+    <div class="button__wrapper">
+    <button class="button add__task" type="sumbit" >ADD TASK</button>
+    <button class="button close__modal" @click="closeAddNewTask" >Canel</button>
+    </div>
+
   </form>
   </div>
 </template>
@@ -53,6 +57,9 @@ export default {
       }
      this.$store.commit("addTask", newTask)
     },
+    closeAddNewTask() {
+      this.$store.commit("closeAddNewTask")
+    }
   },
 };
 </script>
@@ -115,9 +122,11 @@ label{
   font-family: var(--primary-font);
 
 } 
-
-.add__task{
-
+.button__wrapper{
+  display: flex;
+}
+.button{
+  margin: 0 10px;
   outline: none;
   padding: 10px 20px;
   border-radius: 10px;
@@ -125,5 +134,9 @@ label{
   margin-top: 20px;
   background-color: white;
   cursor: pointer;
+}
+.close__modal{
+  background-color: transparent;
+  border: 1px solid black
 }
 </style>

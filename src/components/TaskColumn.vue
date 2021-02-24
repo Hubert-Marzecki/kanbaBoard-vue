@@ -5,12 +5,15 @@
       <h3 class="head__title">{{ columnStatus }}</h3>
       <button class="head__addTask" @click="openAddTaskPanel()">+</button>
     </div>
+    <div class="list__body">
     <draggable
-      class="list__body"
-      v-model="localTasks"
-       @start="drag=true" 
-    >
+      class="draggable"
+      group="tasks" 
+      @change="evt => onTaskDragged(this.columnStatus, evt)" 
+      :list="localTasks"
+    >  
       <!-- ELEMENT -->
+      <!-- <div class="dragged__placehoolder" draggable="true"> some place </div> -->
       <MainTask
         v-for="item in localTasks"
         v-bind:id="item.id"
@@ -18,18 +21,17 @@
         v-bind:name="item.name"
         v-bind:subtasks="item.subtasks"
         v-bind:important="item.important"
-      />
+        v-bind:status="columnStatus" 
+      /> 
       <!-- // ELEMENT -->
     </draggable>
+    </div>
   </div>
   <!-- // TASK COLUMN -->
 </template>
 
 <script>
 import draggable from "vuedraggable";
-// let List = require("./components/List.vue").default;
-import { v4 as uuidv4 } from "uuid";
-import ListElement from "./ListElement";
 import MainTask from "./MainTask";
 import CreateNewTask from "./CreateNewTask";
 
@@ -42,21 +44,27 @@ export default {
     draggable,
   },
   data() {
-    return {
+  return {
       colItems: this.$store.state.items.filter((item) => {
         return item.status === this.columnStatus;
       }),
-      localTasks: this.tasks
+      
     };
   },
   computed: {
-    // localoTasks(){
-    //   return this.tasks
-    // } 
+    localTasks(){
+      return this.tasks
+    } 
   },
   methods: {
-    checkMove(evt) {},
-    addToNewArr() {},
+      onTaskDragged(status, event) {
+        console.log(status)
+        console.log(event)
+        if(event.added){
+          const id = event.added.element.id;
+          this.$store.commit("updateTaskStatus", {id, status})
+        } 
+    },
     drop(e) {
       console.error(e);
       const card_id = e.dataTransfer.getData("card_id", target.id);
@@ -73,9 +81,10 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 @import "../styles/reset-css.css";
 @import "../styles/varibles.css";
+
 
 .list {
   display: flex;
@@ -107,11 +116,22 @@ export default {
   line-height: 0px;
   padding-bottom: 2px;
   cursor: pointer;
+} 
+ .list__body {
+   display: block;
+   background-color: rgb(38, 0, 255);
+   border-bottom-left-radius: 10px;
+   border-bottom-right-radius: 10px;
+} 
+.draggable{
+   display: block;
+  background-color: rgba(128, 0, 107, 0.521);
+  min-height: 400px;
 }
-
-.list__element {
+.dragged__placehoolder{
+  display: block;
+  background-color: rgb(102, 255, 110);
 }
-
 .element__info {
   display: flex;
   justify-content: space-between;

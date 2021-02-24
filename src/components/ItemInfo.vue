@@ -17,8 +17,10 @@
       <option>Height</option>
     </select>
     <div class="button__wrapper">
-    <button class="add__task" type="sumbit" >Update Task</button>
-    <button class="add__task" @click.prevent="closeDisplay" >Cancel</button>
+    <button class="button add__task" type="sumbit" >Update Task</button>
+    <button class="button canel__update" @click.prevent="closeDisplay" >Cancel</button>
+    <button class="button delete__task" @click.prevent="deleteTask" >Delete</button>
+
     </div>
 
   </form>
@@ -33,6 +35,7 @@ export default {
   data() {
       return {
         updatedTask: {
+          id: "NONE",
           name: "",
           details: "",
           important: ""
@@ -42,6 +45,9 @@ export default {
   methods: {
         closeDisplay() {
             this.$store.commit("closeItemInfo")
+        },
+        deleteTask() {
+          this.$store.commit("deleteTask", this.updatedTask.id)
         },
         updateItem() {
           console.error(this.updatedTask)
@@ -83,7 +89,7 @@ export default {
 }
 
 .container {
-  background-color: #9b9b9b70;
+  background-color: #dadada70;
   width: 100vw;
   height: 100vh;
   z-index: 2;
@@ -94,7 +100,7 @@ export default {
 }
 
 .input__holder{
-  background-color: #9b9b9b70;
+  background-color: #c2c2c246;
   position: absolute;
   width: 50%;
   height: 50%;
@@ -136,13 +142,21 @@ label{
   display: flex;
   justify-content: space-around;
 }
-.add__task{
+.button{
+  margin: 0 10px;
   outline: none;
   padding: 10px 20px;
   border-radius: 5px;
   border: none;
   margin-top: 20px;
-  background-color: white;
+  background-color: rgb(199, 253, 188);
   cursor: pointer;
+}
+.canel__update{
+  background-color: transparent;
+  border: 1px solid black
+}
+.delete__task{
+  background-color: rgba(255, 131, 131, 0.459);
 }
 </style>

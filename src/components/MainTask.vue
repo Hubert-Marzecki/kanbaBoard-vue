@@ -10,7 +10,8 @@
       <div class="info__subtasks">
         <img class="subtask__icon" src="../assets/clipboard.png" />
         <span class="subtask__amount" @click="displayTaskSubtasks">
-          Subtasks: {{ subtasks.length }}
+      
+          Subtasks: {{ subtasks.length }} 
         </span>
         <span class="view__notes" @click="displayTaskInfo"> Edit </span>
       </div>
@@ -42,7 +43,7 @@
 // <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 export default {
   name: "MainTask",
-  props: ["id", "name", "subtasks", "important"],
+  props: ["id", "name", "status", "subtasks", "important"],
 
   data() {
     return {
@@ -50,8 +51,6 @@ export default {
       localName: this.name
     };
   },
-
-
 
   methods: {
     updateName() {
@@ -67,6 +66,12 @@ export default {
     displayTaskSubtasks() {
       this.$store.commit("displayTaskSubtasks", this.id);
     },
+     add: function() {
+     console.log("added");
+    },
+    replace: function() {
+   console.log("removed");
+    }
   },
 
 };
@@ -74,18 +79,20 @@ export default {
 <style scoped>
 @import "../styles/reset-css.css";
 @import "../styles/varibles.css";
-@keyframes mymove {
+/* @keyframes mymove {
   from {opacity: 0;}
   to {opacity:  1;}
-}
+} */
 
 .list__element {
+  /* display: block; */
   border: 1px solid white;
   background-color: white;
   border-radius: 10px;
   margin: 10px;
   cursor: pointer;
-  animation: mymove 0.6s;
+  /* animation: mymove 0.6s; */
+  /* position: relative; */
 }
 .element__name {
   margin-left: 10px;

@@ -5,157 +5,99 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 Vue.config.productionTip = false;
 import { v4 as uuidv4 } from "uuid";
-import {bfs} from "./utils";
+import {bfs, toList} from "./utils";
+function task ({name, status, important, subtasks }){
+  return {
+    id: uuidv4(),
+    name: name,
+    details: "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
+    status: status,
+    important: important,
+    subtasks: subtasks,
+  } 
+}
 const store = new Vuex.Store({
   state: {
     items: [
-      {
-        id: uuidv4(),
+      task({
         name: "0",
-        details:
-          "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
         status: "Tasks",
         important: "Medium",
         subtasks: [],
-      },
-      {
-        id: uuidv4(),
+      }),
+      task({
         name: "2",
-        details:
-          "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
         important: "Medium",
         status: "Pending Issue",
         subtasks: [
-          {
-            id: uuidv4(),
+          task({
             name: "01",
-            details:
-              "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
             important: "Medium",
             status: "In Progress",
             subtasks: [],
-          },
-          {
-            id: uuidv4(),
+          }),
+          task({
             name: "21",
-            details:
-              "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
             important: "Medium",
             status: "Under Review",
             subtasks: [
-              {
-                id: uuidv4(),
+              task({
                 name: "Namo",
-                details:
-                  "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
                 important: "Medium",
                 status: "Under Review",
                 subtasks: [],
-              },
-              {
-                id: uuidv4(),
+              }),
+              task({
                 name: "Namo",
-                details:
-                  "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
                 important: "Medium",
                 status: "Done",
                 subtasks: [],
-              },
+              }),
             ],
-          },
-        ],
-      },
-
-      {
-        id: uuidv4(),
+          }),
+        ]
+      }),  
+      task({
         name: "02",
-        details:
-          "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
         status: "In Progress",
         important: "Medium",
         subtasks: [],
-      },
-      {
-        id: uuidv4(),
+      }),
+      task({
         name: "03",
-        details:
-          "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
         status: "Under Review",
         important: "Low",
         subtasks: [],
-      },
-
-      {
-        id: uuidv4(),
+      }),
+      task({
         name: "04",
-        details:
-          "Detailo in numeros basedo on sudoku in mountains. Like a bone without the dog pumpkins are cool and coyots are not.",
         status: "Under Review",
         important: "Height",
         subtasks: [],
-      },
+      })
+    
     ],
     createNewTask: {
       isAddingTask: false,
       status: "",
     },
-    column: {
-      tasks: {
-        displayName: "Tasks",
-        items: [],
-      },
-      pendingIssue: {
-        displayName: "Pending Issue",
-        items: [],
-      },
-      inProgress: {
-        displayName: "In Progress",
-        items: [],
-      },
-      underReview: {
-        displayName: "Under Review",
-        items: [],
-      },
-      pushLive: {
-        displayName: "Push Live",
-        items: [],
-      },
-    },
     selectedTask: "NONE",
-    taskToDisplay: "dupa?",
+    taskToDisplay: "",
     isTaskInfoVisible: false
   },
   mutations: {
-    addItem(state, item) {
-      state.items.push(item);
-    },
-    selectItem(state, uuid) {
-      let select = (i) => {
-        i.children.map(select);
-        i.selected = i.id === uuid;
-        return i;
-      };
-      state.items = state.items.map(select);
-    },
-    rename(state, { uuid, name }) {
-      let select = (i) => {
-        i.children.map(select);
-        if (i.id === uuid) {
-          i.name = name;
-        }
-        return i;
-      };
-      state.items = state.items.map(select);
-    },
     addTask(state, newTask){
       const allTasks = state.items;
-      const selectedTask = state.selectedTask
+      const selectedTask = state.selectedTask;
       const parentTasks = selectedTask === "NONE"
           ? allTasks        
-          : toList(bfs(allTasks, task => task.id === selectedTask, task => task.subtasks));
+          : findTask(allTasks, task => task.id === selectedTask)?.subtasks || []
       parentTasks.push(newTask);
       state.items = [...allTasks];
       state.createNewTask.isAddingTask = false;
+    },
+    closeAddNewTask(state) {
+      state.createNewTask.isAddingTask = false
     },
     closeItemInfo(state) {
       state.isTaskInfoVisible = false
@@ -164,7 +106,7 @@ const store = new Vuex.Store({
       state.selectedTask = "NONE"
     },
     updateTask(state, {id, name, details, important}) {
-      const task = bfs(state.items, task => task.id === id, task => task.subtasks) || {}
+      const task = findTask(state.items, task => task.id === id) || {}
       task.name = name;
       task.details = details;
       task.important = important;
@@ -174,6 +116,7 @@ const store = new Vuex.Store({
       state.taskToDisplay = id;
       state.isTaskInfoVisible = true
     },
+  
     displayTaskSubtasks(state, id){
       state.selectedTask = id;
     },
@@ -182,11 +125,28 @@ const store = new Vuex.Store({
       state.createNewTask.isAddingTask = true;
     },
     updateTaskName(state, {id, name}) {
-      const task = bfs(state.items, task => task.id === id, task => task.subtasks) || {}
+      const task = findTask(state.items, task => task.id === id) || {}
       task.name = name;
-    } 
+    } ,
+    updateTaskStatus(state, {id, status}) {
+      const task = findTask(state.items, task => task.id === id) || {}
+      task.status = status
+    },
+    deleteTask(state, id) {
+      const allTasks = state.items
+       const tasksWithTarget = state.selectedTask === "NONE"
+       ? allTasks
+       : findTask(state.items, task => task.subtasks.some(child => child.id === id))?.subtasks || []
+       const taskIdx = tasksWithTarget.findIndex(task => task.id === id)
+       tasksWithTarget.splice(taskIdx, 1)
+       state.isTaskInfoVisible = false;
+    }
   },
 });
+
+function findTask(tasks, predicate) {
+  return bfs(tasks, predicate, task => task.subtasks);
+}
 
 new Vue({
   render: (h) => h(App),

@@ -47,7 +47,6 @@ export default {
 
   data() {
     return{
-      col: Object.entries(this.$store.state.column),
       cols : [
       "Tasks",
       "Pending Issue",
@@ -144,6 +143,8 @@ export default {
   font-size: 20px;
   font-weight: 700;
   margin-left: 20px;
+  cursor: pointer;
+
 }
 .container__header  .task__total{
   margin-right: 20px;
