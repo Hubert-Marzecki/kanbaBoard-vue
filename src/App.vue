@@ -3,10 +3,7 @@
     <img class="logo" alt="Codein logo" src="./assets/logo.svg" />
     <h1 class="title">Codein To-do list</h1>
     <div class="content">
-      <!-- <List/>
-      <Preview/> -->
       <div class="board__container">
-        <!-- HEADER -->
         <div class="container__header">
           <h1 class="header__title" > <span  @click="resetSelectedTask"> AVESOME BOARD </span> 
           <span v-if="selectedTask !== 'NONE'" class="header__title" @click="goToParentTask">-  Go to parent task </span>
@@ -15,12 +12,9 @@
           <p class="task__total">Tasks: {{taskCount}}</p>
         </div>
         </div>
-        <!-- CONTAINER BODY -->
         <div class="container__body">
-          <!-- TASK COLUMN -->
             <TaskColumn v-for="col in cols" v-bind:key="col" :column-status="col" :parent-task="selectedTask" :tasks="visibleTasks[col]"/>
         </div>
-        <!-- // BODY -->
       </div>
     </div>
     <CreateNewTask v-if="this.$store.state.createNewTask.isAddingTask === true" :status="this.$store.state.createNewTask.status" />
