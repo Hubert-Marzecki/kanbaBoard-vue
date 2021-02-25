@@ -1,10 +1,7 @@
 <template>
-  <!-- TASK COLUMN -->
-  <!-- ELEMENT -->
   <div class="list__element" draggable="true">
-    <!-- @click="displayTaskInfo"-->
     <h3 v-if="isChangingName === false" class="element__name" v-on:dblclick="changeName"  >{{ name }}</h3>
-    <input v-if="isChangingName === true" v-on:blur="updateName" v-on:keyup.enter="updateName" v-model="localName" class="element__name"  />
+    <input v-if="isChangingName === true" v-on:blur="updateName" v-on:keyup.enter="updateName" v-model="localName" class="element__name input"  />
 
     <div class="element__info">
       <div class="info__subtasks">
@@ -35,12 +32,8 @@
       </div>
     </div>
   </div>
-  <!-- // ELEMENT -->
-  <!-- // TASK COLUMN -->
 </template>
 <script>
-// let List = require("./components/List.vue").default;
-// <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 export default {
   name: "MainTask",
   props: ["id", "name", "status", "subtasks", "important"],
@@ -79,20 +72,13 @@ export default {
 <style scoped>
 @import "../styles/reset-css.css";
 @import "../styles/varibles.css";
-/* @keyframes mymove {
-  from {opacity: 0;}
-  to {opacity:  1;}
-} */
-
 .list__element {
-  /* display: block; */
   border: 1px solid white;
   background-color: white;
   border-radius: 10px;
   margin: 10px;
   cursor: pointer;
-  /* animation: mymove 0.6s; */
-  /* position: relative; */
+ 
 }
 .element__name {
   margin-left: 10px;
@@ -106,6 +92,8 @@ export default {
   margin-top: 20px;
   margin-bottom: 10px;
   font-size: 12px;
+  display: flex;
+  flex-direction: column;
 }
 .subtask__icon {
   margin-left: 10px;
@@ -113,10 +101,14 @@ export default {
 }
 
 .info__priority {
-  margin-right: 10px;
+  margin-left: 10px;
   padding: 5px 10px;
-  margin-top: -3px;
   border-radius: 10px;
+  margin-top: 10px; 
+  width: 50%;
+}
+.input{
+  width: 80%;
 }
 .view__notes{
   padding: 5px 8px;

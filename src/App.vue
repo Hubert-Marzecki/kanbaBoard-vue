@@ -15,12 +15,10 @@
           <p class="task__total">Tasks: {{taskCount}}</p>
         </div>
         </div>
-        <!-- // HEADER -->
         <!-- CONTAINER BODY -->
         <div class="container__body">
           <!-- TASK COLUMN -->
             <TaskColumn v-for="col in cols" v-bind:key="col" :column-status="col" :parent-task="selectedTask" :tasks="visibleTasks[col]"/>
-          <!-- // TASK COLUMN -->
         </div>
         <!-- // BODY -->
       </div>
@@ -30,7 +28,6 @@
   </div>
 </template>
 <script>
-// let List = require("./components/List.vue").default;
 
 import TaskColumn from "./components/TaskColumn";
 import CreateNewTask from './components/CreateNewTask'
@@ -75,7 +72,7 @@ export default {
         function count(task){
           return task.subtasks.reduce((acc, it) => acc + count(it), 1)
         }
-        // -1 to discard the `fake` supertask 
+        // -1 to discard the `fake` supertasks 
         return count({subtasks: this.$store.state.items}) - 1
       }
   },

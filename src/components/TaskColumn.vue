@@ -1,5 +1,4 @@
 <template>
-  <!-- TASK COLUMN -->
   <div class="list">
     <div class="list__head">
       <h3 class="head__title">{{ columnStatus }}</h3>
@@ -7,14 +6,12 @@
     </div>
     <div class="list__body">
     <draggable
-      class="draggable"
+    class="draggable"
       group="tasks" 
       @change="evt => onTaskDragged(this.columnStatus, evt)" 
       :list="localTasks"
     >  
-      <!-- ELEMENT -->
-      <!-- <div class="dragged__placehoolder" draggable="true"> some place </div> -->
-      <MainTask
+      <MainTask 
         v-for="item in localTasks"
         v-bind:id="item.id"
         v-bind:key="item.id"
@@ -23,11 +20,9 @@
         v-bind:important="item.important"
         v-bind:status="columnStatus" 
       /> 
-      <!-- // ELEMENT -->
     </draggable>
     </div>
   </div>
-  <!-- // TASK COLUMN -->
 </template>
 
 <script>
@@ -54,22 +49,22 @@ export default {
   computed: {
     localTasks(){
       return this.tasks
-    } 
+    } ,
+    dragOptions() {
+      return {
+        animation: 0,
+        group: "tasks",
+        disabled: false,
+      };
+    },
   },
   methods: {
       onTaskDragged(status, event) {
-        console.log(status)
-        console.log(event)
         if(event.added){
           const id = event.added.element.id;
           this.$store.commit("updateTaskStatus", {id, status})
         } 
     },
-    drop(e) {
-      console.error(e);
-      const card_id = e.dataTransfer.getData("card_id", target.id);
-    },
-    // dispatch
     openAddTaskPanel() {
       this.$store.commit("openAddTaskPanel", this.columnStatus)
     },
@@ -85,7 +80,6 @@ export default {
 @import "../styles/reset-css.css";
 @import "../styles/varibles.css";
 
-
 .list {
   display: flex;
   flex-direction: column;
@@ -97,7 +91,6 @@ export default {
 .list:last-child {
   margin-right: 20px;
 }
-
 .list__head {
   display: flex;
   justify-content: space-between;
@@ -106,7 +99,6 @@ export default {
   margin-left: 10px;
   font-weight: 600;
 }
-
 .head__addTask {
   border: none;
   outline: none;
@@ -119,19 +111,16 @@ export default {
 } 
  .list__body {
    display: block;
-   background-color: rgb(38, 0, 255);
+   min-height: 400px;
+   /* background-color: rgb(38, 0, 255); */
    border-bottom-left-radius: 10px;
    border-bottom-right-radius: 10px;
 } 
 .draggable{
-   display: block;
-  background-color: rgba(128, 0, 107, 0.521);
-  min-height: 400px;
-}
-.dragged__placehoolder{
   display: block;
-  background-color: rgb(102, 255, 110);
+  min-height: 100px;
 }
+
 .element__info {
   display: flex;
   justify-content: space-between;

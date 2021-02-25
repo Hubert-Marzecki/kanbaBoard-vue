@@ -1,7 +1,5 @@
 <template>
-  <!-- TASK COLUMN -->
 
-      <!-- ELEMENT -->
       <div class="list__element">
         <h3 class="element__header">Create a profile screen</h3>
         <div class="element__info">
@@ -14,13 +12,10 @@
           </div>
         </div>
       </div>
-      <!-- // ELEMENT -->
-  <!-- // TASK COLUMN -->
+    
 </template>
 
 <script>
-// let List = require("./components/List.vue").default;
-import { v4 as uuidv4 } from "uuid";
 
 export default {
   name: "ListElement",
@@ -43,9 +38,7 @@ export default {
 }
 
 
-.list__element{
 
-}
 
 .element__info{
   display: flex;

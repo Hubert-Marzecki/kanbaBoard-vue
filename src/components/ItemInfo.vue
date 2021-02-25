@@ -27,7 +27,6 @@
   </div>
 </template>
 <script>
-// let List = require("./components/List.vue").default;
 import { v4 as uuidv4 } from "uuid";
 import {bfs} from "../utils";
 export default {
